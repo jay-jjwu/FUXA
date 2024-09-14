@@ -4444,6 +4444,9 @@ var ChartViewType;
 var ChartRangeType;
 
 (function (ChartRangeType) {
+  ChartRangeType["last1h"] = "chart.rangetype-last1h";
+  ChartRangeType["last2h"] = "chart.rangetype-last2h";
+  ChartRangeType["last4h"] = "chart.rangetype-last4h";
   ChartRangeType["last8h"] = "chart.rangetype-last8h";
   ChartRangeType["last1d"] = "chart.rangetype-last1d";
   ChartRangeType["last3d"] = "chart.rangetype-last3d";
@@ -4465,15 +4468,24 @@ class ChartRangeConverter {
     let types = Object.keys(ChartRangeType);
 
     if (crt === types[0]) {
+      // ChartRangeType.last1h) {
+      return 1;
+    } else if (crt === types[1]) {
+      // ChartRangeType.last2h) {
+      return 2;
+    } else if (crt === types[2]) {
+      // ChartRangeType.last4h) {
+      return 4;
+    } else if (crt === types[3]) {
       // ChartRangeType.last8h) {
       return 8;
-    } else if (crt === types[1]) {
+    } else if (crt === types[4]) {
       // ChartRangeType.last1d) {
       return 24;
-    } else if (crt === types[2]) {
+    } else if (crt === types[5]) {
       // ChartRangeType.last3d) {
       return 24 * 3;
-    } else if (crt === types[3]) {
+    } else if (crt === types[6]) {
       // ChartRangeType.last1w) {
       return 24 * 7;
     }
@@ -4508,6 +4520,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "MessageSecurityMode": () => (/* binding */ MessageSecurityMode),
 /* harmony export */   "ModbusOptionType": () => (/* binding */ ModbusOptionType),
 /* harmony export */   "ModbusTagType": () => (/* binding */ ModbusTagType),
+/* harmony export */   "OpcUaTagType": () => (/* binding */ OpcUaTagType),
 /* harmony export */   "PlaceholderDevice": () => (/* binding */ PlaceholderDevice),
 /* harmony export */   "SecurityPolicy": () => (/* binding */ SecurityPolicy),
 /* harmony export */   "ServerTagType": () => (/* binding */ ServerTagType),
@@ -4806,6 +4819,26 @@ var ModbusTagType;
   ModbusTagType["Int32MLE"] = "Int32MLE";
   ModbusTagType["UInt32MLE"] = "UInt32MLE"; // String = 'String'
 })(ModbusTagType || (ModbusTagType = {}));
+
+var OpcUaTagType;
+
+(function (OpcUaTagType) {
+  OpcUaTagType["Boolean"] = "Boolean";
+  OpcUaTagType["SByte"] = "SByte";
+  OpcUaTagType["Byte"] = "Byte";
+  OpcUaTagType["Int16"] = "Int16";
+  OpcUaTagType["UInt16"] = "UInt16";
+  OpcUaTagType["Int32"] = "Int32";
+  OpcUaTagType["UInt32"] = "UInt32";
+  OpcUaTagType["Int64"] = "Int64";
+  OpcUaTagType["UInt64"] = "UInt64";
+  OpcUaTagType["Float"] = "Float";
+  OpcUaTagType["Double"] = "Double";
+  OpcUaTagType["String"] = "String";
+  OpcUaTagType["DateTime"] = "DateTime";
+  OpcUaTagType["Guid"] = "Guid";
+  OpcUaTagType["ByteString"] = "ByteString";
+})(OpcUaTagType || (OpcUaTagType = {}));
 
 var ModbusOptionType;
 
@@ -5328,6 +5361,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "GaugeActionsType": () => (/* binding */ GaugeActionsType),
 /* harmony export */   "GaugeEvent": () => (/* binding */ GaugeEvent),
 /* harmony export */   "GaugeEventActionType": () => (/* binding */ GaugeEventActionType),
+/* harmony export */   "GaugeEventRelativeFromType": () => (/* binding */ GaugeEventRelativeFromType),
 /* harmony export */   "GaugeEventRelativeFromType": () => (/* binding */ GaugeEventRelativeFromType),
 /* harmony export */   "GaugeEventSetValueType": () => (/* binding */ GaugeEventSetValueType),
 /* harmony export */   "GaugeEventType": () => (/* binding */ GaugeEventType),
@@ -7817,7 +7851,9 @@ let HmiService = HmiService_1 = class HmiService {
 
   askDeviceValues() {
     if (this.socket) {
-      this.socket.emit(IoEventTypes.DEVICE_VALUES, 'get');
+      this.socket.emit(IoEventTypes.DEVICE_VALUES, {
+        cmd: 'get'
+      });
     } else if (this.bridge) {
       this.bridge.getDeviceValues(null);
     }
@@ -12038,6 +12074,7 @@ let AlarmViewComponent = class AlarmViewComponent {
   }
 
   onClose() {
+    this.onShowAlarms();
     this.currentShowMode = 'collapse';
     this.showMode.emit('close');
     this.stopAskAlarmsValues();
@@ -12139,8 +12176,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _app_component_html_ngResource__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./app.component.html?ngResource */ 33383);
 /* harmony import */ var _app_component_css_ngResource__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./app.component.css?ngResource */ 56715);
 /* harmony import */ var _app_component_css_ngResource__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_app_component_css_ngResource__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! @angular/core */ 22560);
-/* harmony import */ var _angular_common__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! @angular/common */ 94666);
+/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! @angular/core */ 22560);
+/* harmony import */ var _angular_common__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! @angular/common */ 94666);
 /* harmony import */ var _angular_router__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! @angular/router */ 60124);
 /* harmony import */ var _ngx_translate_core__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! @ngx-translate/core */ 38699);
 /* harmony import */ var rxjs__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! rxjs */ 36646);
@@ -12186,6 +12223,7 @@ let AppComponent = class AppComponent {
   settingsService;
   translateService;
   heartbeatService;
+  cdr;
   title = 'app';
   location;
   showdev = false;
@@ -12194,13 +12232,14 @@ let AppComponent = class AppComponent {
   subscriptionLoad;
   subscriptionShowLoading;
 
-  constructor(router, appService, projectService, settingsService, translateService, heartbeatService, location) {
+  constructor(router, appService, projectService, settingsService, translateService, heartbeatService, cdr, location) {
     this.router = router;
     this.appService = appService;
     this.projectService = projectService;
     this.settingsService = settingsService;
     this.translateService = translateService;
     this.heartbeatService = heartbeatService;
+    this.cdr = cdr;
     this.location = location;
   }
 
@@ -12242,6 +12281,7 @@ let AppComponent = class AppComponent {
 
       this.subscriptionShowLoading = this.appService.onShowLoading.subscribe(show => {
         this.isLoading = show;
+        this.cdr.detectChanges();
       }, error => {
         this.isLoading = false;
         console.error('Error to show loading');
@@ -12330,22 +12370,24 @@ let AppComponent = class AppComponent {
   }, {
     type: _services_heartbeat_service__WEBPACK_IMPORTED_MODULE_7__.HeartbeatService
   }, {
-    type: _angular_common__WEBPACK_IMPORTED_MODULE_15__.Location
+    type: _angular_core__WEBPACK_IMPORTED_MODULE_15__.ChangeDetectorRef
+  }, {
+    type: _angular_common__WEBPACK_IMPORTED_MODULE_16__.Location
   }];
   static propDecorators = {
     fabmenu: [{
-      type: _angular_core__WEBPACK_IMPORTED_MODULE_16__.ViewChild,
+      type: _angular_core__WEBPACK_IMPORTED_MODULE_15__.ViewChild,
       args: ['fabmenu', {
         static: false
       }]
     }]
   };
 };
-AppComponent = __decorate([(0,_angular_core__WEBPACK_IMPORTED_MODULE_16__.Component)({
+AppComponent = __decorate([(0,_angular_core__WEBPACK_IMPORTED_MODULE_15__.Component)({
   selector: 'app-root',
   template: _app_component_html_ngResource__WEBPACK_IMPORTED_MODULE_0__,
   styles: [(_app_component_css_ngResource__WEBPACK_IMPORTED_MODULE_1___default())]
-}), __metadata("design:paramtypes", [_angular_router__WEBPACK_IMPORTED_MODULE_13__.Router, _services_app_service__WEBPACK_IMPORTED_MODULE_6__.AppService, _services_project_service__WEBPACK_IMPORTED_MODULE_3__.ProjectService, _services_settings_service__WEBPACK_IMPORTED_MODULE_4__.SettingsService, _ngx_translate_core__WEBPACK_IMPORTED_MODULE_14__.TranslateService, _services_heartbeat_service__WEBPACK_IMPORTED_MODULE_7__.HeartbeatService, _angular_common__WEBPACK_IMPORTED_MODULE_15__.Location])], AppComponent);
+}), __metadata("design:paramtypes", [_angular_router__WEBPACK_IMPORTED_MODULE_13__.Router, _services_app_service__WEBPACK_IMPORTED_MODULE_6__.AppService, _services_project_service__WEBPACK_IMPORTED_MODULE_3__.ProjectService, _services_settings_service__WEBPACK_IMPORTED_MODULE_4__.SettingsService, _ngx_translate_core__WEBPACK_IMPORTED_MODULE_14__.TranslateService, _services_heartbeat_service__WEBPACK_IMPORTED_MODULE_7__.HeartbeatService, _angular_core__WEBPACK_IMPORTED_MODULE_15__.ChangeDetectorRef, _angular_common__WEBPACK_IMPORTED_MODULE_16__.Location])], AppComponent);
 
 
 /***/ }),
@@ -13569,7 +13611,7 @@ let DeviceListComponent = class DeviceListComponent {
 
   addOpcTags() {
     if (this.deviceSelected.type === _models_device__WEBPACK_IMPORTED_MODULE_3__.DeviceType.OPCUA) {
-      this.tagPropertyService.editTagPropertyOpcUa(this.deviceSelected, this.tagsMap).subscribe(result => {
+      this.tagPropertyService.addTagsOpcUa(this.deviceSelected, this.tagsMap).subscribe(result => {
         this.bindToTable(this.deviceSelected.tags);
       });
       return;
@@ -13625,7 +13667,7 @@ let DeviceListComponent = class DeviceListComponent {
   }
 
   isToEdit(type, tag) {
-    if (type === _models_device__WEBPACK_IMPORTED_MODULE_3__.DeviceType.SiemensS7 || type === _models_device__WEBPACK_IMPORTED_MODULE_3__.DeviceType.ModbusTCP || type === _models_device__WEBPACK_IMPORTED_MODULE_3__.DeviceType.ModbusRTU || type === _models_device__WEBPACK_IMPORTED_MODULE_3__.DeviceType.internal || type === _models_device__WEBPACK_IMPORTED_MODULE_3__.DeviceType.EthernetIP || type === _models_device__WEBPACK_IMPORTED_MODULE_3__.DeviceType.FuxaServer) {
+    if (type === _models_device__WEBPACK_IMPORTED_MODULE_3__.DeviceType.SiemensS7 || type === _models_device__WEBPACK_IMPORTED_MODULE_3__.DeviceType.ModbusTCP || type === _models_device__WEBPACK_IMPORTED_MODULE_3__.DeviceType.ModbusRTU || type === _models_device__WEBPACK_IMPORTED_MODULE_3__.DeviceType.internal || type === _models_device__WEBPACK_IMPORTED_MODULE_3__.DeviceType.EthernetIP || type === _models_device__WEBPACK_IMPORTED_MODULE_3__.DeviceType.FuxaServer || type === _models_device__WEBPACK_IMPORTED_MODULE_3__.DeviceType.OPCUA) {
       return true;
     } else if (type === _models_device__WEBPACK_IMPORTED_MODULE_3__.DeviceType.MQTTclient) {
       if (tag && tag.options && (tag.options.pubs || tag.options.subs)) {
@@ -13671,6 +13713,14 @@ let DeviceListComponent = class DeviceListComponent {
 
     if (this.deviceSelected.type === _models_device__WEBPACK_IMPORTED_MODULE_3__.DeviceType.EthernetIP) {
       this.tagPropertyService.editTagPropertyEthernetIp(this.deviceSelected, tag, checkToAdd).subscribe(result => {
+        this.tagsMap[tag.id] = tag;
+        this.bindToTable(this.deviceSelected.tags);
+      });
+      return;
+    }
+
+    if (this.deviceSelected.type === _models_device__WEBPACK_IMPORTED_MODULE_3__.DeviceType.OPCUA) {
+      this.tagPropertyService.editTagPropertyOpcUa(this.deviceSelected, tag, checkToAdd).subscribe(result => {
         this.tagsMap[tag.id] = tag;
         this.bindToTable(this.deviceSelected.tags);
       });
@@ -15322,7 +15372,7 @@ let DeviceTagSelectionComponent = class DeviceTagSelectionComponent {
     let newTag = new _models_device__WEBPACK_IMPORTED_MODULE_2__.Tag(_helpers_utils__WEBPACK_IMPORTED_MODULE_4__.Utils.getGUID(_models_device__WEBPACK_IMPORTED_MODULE_2__.TAG_PREFIX));
 
     if (device.type === _models_device__WEBPACK_IMPORTED_MODULE_2__.DeviceType.OPCUA) {
-      this.tagPropertyService.editTagPropertyOpcUa(device).subscribe(result => {
+      this.tagPropertyService.addTagsOpcUa(device).subscribe(result => {
         this.loadDevicesTags();
       });
     } else if (device.type === _models_device__WEBPACK_IMPORTED_MODULE_2__.DeviceType.BACnet) {
@@ -16853,14 +16903,16 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "TagPropertyEditOpcuaComponent": () => (/* binding */ TagPropertyEditOpcuaComponent)
 /* harmony export */ });
 /* harmony import */ var _tag_property_edit_opcua_component_html_ngResource__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./tag-property-edit-opcua.component.html?ngResource */ 76429);
-/* harmony import */ var _tag_property_edit_opcua_component_css_ngResource__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./tag-property-edit-opcua.component.css?ngResource */ 63615);
-/* harmony import */ var _tag_property_edit_opcua_component_css_ngResource__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_tag_property_edit_opcua_component_css_ngResource__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @angular/core */ 22560);
+/* harmony import */ var _tag_property_edit_opcua_component_scss_ngResource__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./tag-property-edit-opcua.component.scss?ngResource */ 12788);
+/* harmony import */ var _tag_property_edit_opcua_component_scss_ngResource__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_tag_property_edit_opcua_component_scss_ngResource__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @angular/core */ 22560);
 /* harmony import */ var _services_hmi_service__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../_services/hmi.service */ 23994);
-/* harmony import */ var _angular_material_legacy_dialog__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @angular/material/legacy-dialog */ 58446);
-/* harmony import */ var rxjs__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! rxjs */ 80228);
-/* harmony import */ var rxjs__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! rxjs */ 68951);
-/* harmony import */ var _gui_helpers_treetable_treetable_component__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../gui-helpers/treetable/treetable.component */ 93813);
+/* harmony import */ var _angular_material_legacy_dialog__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! @angular/material/legacy-dialog */ 58446);
+/* harmony import */ var _models_device__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../_models/device */ 88396);
+/* harmony import */ var rxjs__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! rxjs */ 80228);
+/* harmony import */ var rxjs__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! rxjs */ 68951);
+/* harmony import */ var _gui_helpers_treetable_treetable_component__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../../gui-helpers/treetable/treetable.component */ 93813);
+/* harmony import */ var _angular_forms__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @angular/forms */ 2508);
 var __decorate = undefined && undefined.__decorate || function (decorators, target, key, desc) {
   var c = arguments.length,
       r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc,
@@ -16880,48 +16932,63 @@ var __metadata = undefined && undefined.__metadata || function (k, v) {
 
 
 
+
+
 let TagPropertyEditOpcuaComponent = class TagPropertyEditOpcuaComponent {
+  fb;
   hmiService;
   dialogRef;
   data;
-  result = new _angular_core__WEBPACK_IMPORTED_MODULE_4__.EventEmitter();
-  destroy$ = new rxjs__WEBPACK_IMPORTED_MODULE_5__.Subject();
+  formGroup;
+  result = new _angular_core__WEBPACK_IMPORTED_MODULE_5__.EventEmitter();
+  destroy$ = new rxjs__WEBPACK_IMPORTED_MODULE_6__.Subject();
   treetable;
+  tagType = _models_device__WEBPACK_IMPORTED_MODULE_3__.OpcUaTagType;
   config = {
     height: '640px',
     width: '1000px'
   };
 
-  constructor(hmiService, dialogRef, data) {
+  constructor(fb, hmiService, dialogRef, data) {
+    this.fb = fb;
     this.hmiService = hmiService;
     this.dialogRef = dialogRef;
     this.data = data;
   }
 
   ngOnInit() {
-    this.hmiService.onDeviceBrowse.pipe((0,rxjs__WEBPACK_IMPORTED_MODULE_6__.takeUntil)(this.destroy$)).subscribe(values => {
-      if (this.data.device.id === values.device) {
-        if (values.error) {
-          this.addError(values.node, values.error);
-        } else {
-          this.addNodes(values.node, values.result);
-        }
-      }
-    });
-    this.hmiService.onDeviceNodeAttribute.pipe((0,rxjs__WEBPACK_IMPORTED_MODULE_6__.takeUntil)(this.destroy$)).subscribe(values => {
-      if (this.data.device.id === values.device) {
-        if (values.error) {//   this.addError(values.node, values.error);
-        } else if (values.node) {
-          if (values.node.attribute[14]) {
-            // datatype
-            values.node.type = values.node.attribute[14];
+    if (this.data.tag) {
+      this.formGroup = this.fb.group({
+        deviceName: [this.data.device.name, _angular_forms__WEBPACK_IMPORTED_MODULE_7__.Validators.required],
+        tagName: [this.data.tag.name, _angular_forms__WEBPACK_IMPORTED_MODULE_7__.Validators.required],
+        tagType: [this.data.tag.type],
+        tagDescription: [this.data.tag.description]
+      });
+    } else {
+      this.hmiService.onDeviceBrowse.pipe((0,rxjs__WEBPACK_IMPORTED_MODULE_8__.takeUntil)(this.destroy$)).subscribe(values => {
+        if (this.data.device.id === values.device) {
+          if (values.error) {
+            this.addError(values.node, values.error);
+          } else {
+            this.addNodes(values.node, values.result);
           }
-
-          this.treetable.setNodeProperty(values.node, this.attributeToString(values.node.attribute));
         }
-      }
-    });
-    this.queryNext(null);
+      });
+      this.hmiService.onDeviceNodeAttribute.pipe((0,rxjs__WEBPACK_IMPORTED_MODULE_8__.takeUntil)(this.destroy$)).subscribe(values => {
+        if (this.data.device.id === values.device) {
+          if (values.error) {//   this.addError(values.node, values.error);
+          } else if (values.node) {
+            if (values.node.attribute[14]) {
+              // datatype
+              values.node.type = values.node.attribute[14];
+            }
+
+            this.treetable.setNodeProperty(values.node, this.attributeToString(values.node.attribute));
+          }
+        }
+      });
+      this.queryNext(null);
+    }
   }
 
   ngOnDestroy() {
@@ -16945,12 +17012,12 @@ let TagPropertyEditOpcuaComponent = class TagPropertyEditOpcuaComponent {
     if (nodes) {
       let tempTags = Object.values(this.data.device.tags);
       nodes.forEach(n => {
-        let node = new _gui_helpers_treetable_treetable_component__WEBPACK_IMPORTED_MODULE_3__.Node(n.id, n.name);
+        let node = new _gui_helpers_treetable_treetable_component__WEBPACK_IMPORTED_MODULE_4__.Node(n.id, n.name);
         node.class = n.class;
         node.property = this.getProperty(n);
         let enabled = true;
 
-        if (node.class === _gui_helpers_treetable_treetable_component__WEBPACK_IMPORTED_MODULE_3__.NodeType.Variable) {
+        if (node.class === _gui_helpers_treetable_treetable_component__WEBPACK_IMPORTED_MODULE_4__.NodeType.Variable) {
           const selected = tempTags.find(t => t.address === n.id);
 
           if (selected) {
@@ -16960,7 +17027,7 @@ let TagPropertyEditOpcuaComponent = class TagPropertyEditOpcuaComponent {
 
         this.treetable.addNode(node, parent, enabled, false);
 
-        if (node.class === _gui_helpers_treetable_treetable_component__WEBPACK_IMPORTED_MODULE_3__.NodeType.Variable) {
+        if (node.class === _gui_helpers_treetable_treetable_component__WEBPACK_IMPORTED_MODULE_4__.NodeType.Variable) {
           this.hmiService.askNodeAttributes(this.data.device.id, n);
         }
       });
@@ -17004,45 +17071,51 @@ let TagPropertyEditOpcuaComponent = class TagPropertyEditOpcuaComponent {
   }
 
   onOkClick() {
-    this.data.nodes = [];
-    Object.keys(this.treetable.nodes).forEach(key => {
-      let n = this.treetable.nodes[key];
+    if (this.data.tag) {
+      this.result.emit(this.formGroup.getRawValue());
+    } else {
+      this.data.nodes = [];
+      Object.keys(this.treetable.nodes).forEach(key => {
+        let n = this.treetable.nodes[key];
 
-      if (n.checked && n.enabled && (n.type || !n.childs || n.childs.length == 0)) {
-        this.data.nodes.push(this.treetable.nodes[key]);
-      }
-    });
-    this.result.emit(this.data);
+        if (n.checked && n.enabled && (n.type || !n.childs || n.childs.length == 0)) {
+          this.data.nodes.push(this.treetable.nodes[key]);
+        }
+      });
+      this.result.emit(this.data);
+    }
   }
 
   static ctorParameters = () => [{
+    type: _angular_forms__WEBPACK_IMPORTED_MODULE_7__.UntypedFormBuilder
+  }, {
     type: _services_hmi_service__WEBPACK_IMPORTED_MODULE_2__.HmiService
   }, {
-    type: _angular_material_legacy_dialog__WEBPACK_IMPORTED_MODULE_7__.MatLegacyDialogRef
+    type: _angular_material_legacy_dialog__WEBPACK_IMPORTED_MODULE_9__.MatLegacyDialogRef
   }, {
     type: undefined,
     decorators: [{
-      type: _angular_core__WEBPACK_IMPORTED_MODULE_4__.Inject,
-      args: [_angular_material_legacy_dialog__WEBPACK_IMPORTED_MODULE_7__.MAT_LEGACY_DIALOG_DATA]
+      type: _angular_core__WEBPACK_IMPORTED_MODULE_5__.Inject,
+      args: [_angular_material_legacy_dialog__WEBPACK_IMPORTED_MODULE_9__.MAT_LEGACY_DIALOG_DATA]
     }]
   }];
   static propDecorators = {
     result: [{
-      type: _angular_core__WEBPACK_IMPORTED_MODULE_4__.Output
+      type: _angular_core__WEBPACK_IMPORTED_MODULE_5__.Output
     }],
     treetable: [{
-      type: _angular_core__WEBPACK_IMPORTED_MODULE_4__.ViewChild,
-      args: [_gui_helpers_treetable_treetable_component__WEBPACK_IMPORTED_MODULE_3__.TreetableComponent, {
+      type: _angular_core__WEBPACK_IMPORTED_MODULE_5__.ViewChild,
+      args: [_gui_helpers_treetable_treetable_component__WEBPACK_IMPORTED_MODULE_4__.TreetableComponent, {
         static: false
       }]
     }]
   };
 };
-TagPropertyEditOpcuaComponent = __decorate([(0,_angular_core__WEBPACK_IMPORTED_MODULE_4__.Component)({
+TagPropertyEditOpcuaComponent = __decorate([(0,_angular_core__WEBPACK_IMPORTED_MODULE_5__.Component)({
   selector: 'app-tag-property-edit-opcua',
   template: _tag_property_edit_opcua_component_html_ngResource__WEBPACK_IMPORTED_MODULE_0__,
-  styles: [(_tag_property_edit_opcua_component_css_ngResource__WEBPACK_IMPORTED_MODULE_1___default())]
-}), __metadata("design:paramtypes", [_services_hmi_service__WEBPACK_IMPORTED_MODULE_2__.HmiService, _angular_material_legacy_dialog__WEBPACK_IMPORTED_MODULE_7__.MatLegacyDialogRef, Object])], TagPropertyEditOpcuaComponent);
+  styles: [(_tag_property_edit_opcua_component_scss_ngResource__WEBPACK_IMPORTED_MODULE_1___default())]
+}), __metadata("design:paramtypes", [_angular_forms__WEBPACK_IMPORTED_MODULE_7__.UntypedFormBuilder, _services_hmi_service__WEBPACK_IMPORTED_MODULE_2__.HmiService, _angular_material_legacy_dialog__WEBPACK_IMPORTED_MODULE_9__.MatLegacyDialogRef, Object])], TagPropertyEditOpcuaComponent);
 
 
 /***/ }),
@@ -17810,7 +17883,7 @@ let TagPropertyService = class TagPropertyService {
     }));
   }
 
-  editTagPropertyOpcUa(device, tagsMap) {
+  addTagsOpcUa(device, tagsMap) {
     let dialogRef = this.dialog.open(_tag_property_edit_opcua_tag_property_edit_opcua_component__WEBPACK_IMPORTED_MODULE_7__.TagPropertyEditOpcuaComponent, {
       disableClose: true,
       position: {
@@ -17834,6 +17907,40 @@ let TagPropertyService = class TagPropertyService {
         }
       });
       this.projectService.setDeviceTags(device);
+      dialogRef.close();
+      return result;
+    }));
+  }
+
+  editTagPropertyOpcUa(device, tag, checkToAdd) {
+    let oldTagId = tag.id;
+    let tagToEdit = _helpers_utils__WEBPACK_IMPORTED_MODULE_1__.Utils.clone(tag);
+    let dialogRef = this.dialog.open(_tag_property_edit_opcua_tag_property_edit_opcua_component__WEBPACK_IMPORTED_MODULE_7__.TagPropertyEditOpcuaComponent, {
+      disableClose: true,
+      position: {
+        top: '60px'
+      },
+      data: {
+        device: device,
+        tag: tagToEdit
+      }
+    });
+    return dialogRef.componentInstance.result.pipe((0,rxjs__WEBPACK_IMPORTED_MODULE_13__.map)(result => {
+      if (result) {
+        tag.type = result.tagType;
+        tag.description = result.tagDescription;
+
+        if (checkToAdd) {
+          this.checkToAdd(tag, device);
+        } else if (tag.id !== oldTagId) {
+          //remove old tag device reference
+          delete device.tags[oldTagId];
+          this.checkToAdd(tag, device);
+        }
+
+        this.projectService.setDeviceTags(device);
+      }
+
       dialogRef.close();
       return result;
     }));
@@ -33776,7 +33883,7 @@ let GaugeBaseComponent = GaugeBaseComponent_1 = class GaugeBaseComponent {
     gaugeStatus.actionRef.type = act.type;
 
     if (toEnable) {
-      if (gaugeStatus.actionRef.timer) {
+      if (gaugeStatus.actionRef.timer && GaugeBaseComponent_1.getBlinkActionId(act) == gaugeStatus.actionRef.spool.actId) {
         return;
       }
 
@@ -49242,24 +49349,6 @@ module.exports = ___CSS_LOADER_EXPORT___.toString();
 
 /***/ }),
 
-/***/ 63615:
-/*!**************************************************************************************************************!*\
-  !*** ./src/app/device/tag-property/tag-property-edit-opcua/tag-property-edit-opcua.component.css?ngResource ***!
-  \**************************************************************************************************************/
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
-
-// Imports
-var ___CSS_LOADER_API_SOURCEMAP_IMPORT___ = __webpack_require__(/*! ../../../../../node_modules/css-loader/dist/runtime/sourceMaps.js */ 49579);
-var ___CSS_LOADER_API_IMPORT___ = __webpack_require__(/*! ../../../../../node_modules/css-loader/dist/runtime/api.js */ 60931);
-var ___CSS_LOADER_EXPORT___ = ___CSS_LOADER_API_IMPORT___(___CSS_LOADER_API_SOURCEMAP_IMPORT___);
-// Module
-___CSS_LOADER_EXPORT___.push([module.id, ":host {\r\n    display: block;\r\n}", "",{"version":3,"sources":["webpack://./src/app/device/tag-property/tag-property-edit-opcua/tag-property-edit-opcua.component.css"],"names":[],"mappings":"AAAA;IACI,cAAc;AAClB","sourcesContent":[":host {\r\n    display: block;\r\n}"],"sourceRoot":""}]);
-// Exports
-module.exports = ___CSS_LOADER_EXPORT___.toString();
-
-
-/***/ }),
-
 /***/ 15188:
 /*!****************************************************************************************************************!*\
   !*** ./src/app/device/tag-property/tag-property-edit-webapi/tag-property-edit-webapi.component.css?ngResource ***!
@@ -50646,6 +50735,24 @@ module.exports = ___CSS_LOADER_EXPORT___.toString();
 
 /***/ }),
 
+/***/ 12788:
+/*!***************************************************************************************************************!*\
+  !*** ./src/app/device/tag-property/tag-property-edit-opcua/tag-property-edit-opcua.component.scss?ngResource ***!
+  \***************************************************************************************************************/
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+
+// Imports
+var ___CSS_LOADER_API_SOURCEMAP_IMPORT___ = __webpack_require__(/*! ../../../../../node_modules/css-loader/dist/runtime/sourceMaps.js */ 49579);
+var ___CSS_LOADER_API_IMPORT___ = __webpack_require__(/*! ../../../../../node_modules/css-loader/dist/runtime/api.js */ 60931);
+var ___CSS_LOADER_EXPORT___ = ___CSS_LOADER_API_IMPORT___(___CSS_LOADER_API_SOURCEMAP_IMPORT___);
+// Module
+___CSS_LOADER_EXPORT___.push([module.id, ":host {\n  display: block;\n}\n:host .container {\n  width: 400px;\n}\n:host .item-block {\n  display: block;\n}\n:host .item-block mat-select, :host .item-block input, :host .item-block span {\n  width: calc(100% - 5px);\n}", "",{"version":3,"sources":["webpack://./src/app/device/tag-property/tag-property-edit-opcua/tag-property-edit-opcua.component.scss"],"names":[],"mappings":"AAAA;EACI,cAAA;AACJ;AACI;EACI,YAAA;AACR;AAEI;EACI,cAAA;AAAR;AACQ;EACI,uBAAA;AACZ","sourcesContent":[":host {\r\n    display: block;\r\n\r\n    .container {\r\n        width: 400px;\r\n    }\r\n\r\n    .item-block {\r\n        display: block;\r\n        mat-select, input, span {\r\n            width:calc(100% - 5px);\r\n        }\r\n    }\r\n}"],"sourceRoot":""}]);
+// Exports
+module.exports = ___CSS_LOADER_EXPORT___.toString();
+
+
+/***/ }),
+
 /***/ 40950:
 /*!*********************************************************************************************************!*\
   !*** ./src/app/device/tag-property/tag-property-edit-s7/tag-property-edit-s7.component.scss?ngResource ***!
@@ -51782,7 +51889,7 @@ module.exports = "<form [formGroup]=\"formGroup\"\r\n      class=\"container\">\
 /***/ ((module) => {
 
 "use strict";
-module.exports = "<div>\r\n    <h1 mat-dialog-title class=\"dialog-title\" mat-dialog-draggable>{{'device.browsetag-property-title' | translate}}</h1>\r\n    <mat-icon (click)=\"onNoClick()\" class=\"dialog-close-btn\">clear</mat-icon>\r\n    <div mat-dialog-content style=\"display: contents;\">\r\n        <div style=\"overflow: auto;\">\r\n            <ngx-treetable #treetable [config]=\"config\" (expand)=\"queryNext($event)\"></ngx-treetable>\r\n        </div>\r\n    </div>\r\n    <div mat-dialog-actions class=\"dialog-action\">\r\n        <button mat-raised-button (click)=\"onNoClick()\">{{'dlg.cancel' | translate}}</button>\r\n        <button mat-raised-button color=\"primary\" (click)=\"onOkClick()\">{{'dlg.ok' | translate}}</button>\r\n    </div>\r\n</div>";
+module.exports = "<div>\r\n    <h1 mat-dialog-title class=\"dialog-title\" mat-dialog-draggable>\r\n        <ng-container *ngIf=\"data.tag; else mode\">\r\n            {{'device.tag-property-title' | translate}}\r\n        </ng-container>\r\n        <ng-template #mode>\r\n            {{'device.browsetag-property-title' | translate}}\r\n        </ng-template>\r\n    </h1>\r\n    <mat-icon (click)=\"onNoClick()\" class=\"dialog-close-btn\">clear</mat-icon>\r\n    <div mat-dialog-content style=\"display: contents;\">\r\n        <ng-container *ngIf=\"data.tag; else addTag\">\r\n            <div [formGroup]=\"formGroup\" class=\"container\">\r\n                <div class=\"my-form-field item-block\">\r\n                    <span>{{'device.tag-property-device' | translate}}</span>\r\n                    <input formControlName=\"deviceName\" type=\"text\" readonly>\r\n                </div>\r\n                <div class=\"my-form-field item-block mt10\">\r\n                    <span>{{'device.tag-property-name' | translate}}</span>\r\n                    <input formControlName=\"tagName\" type=\"text\" readonly>\r\n                </div>\r\n                <div class=\"my-form-field item-block mt10\">\r\n                    <span>{{'device.tag-property-type' | translate}}</span>\r\n                    <mat-select formControlName=\"tagType\">\r\n                        <mat-option *ngFor=\"let type of tagType | enumToArray\" [value]=\"type.key\">\r\n                            {{ type.value }}\r\n                        </mat-option>\r\n                    </mat-select>\r\n                </div>\r\n                <div class=\"my-form-field item-block mt10\">\r\n                    <span>{{'device.tag-property-description' | translate}}</span>\r\n                    <input formControlName=\"tagDescription\" type=\"text\">\r\n                </div>\r\n            </div>\r\n        </ng-container>\r\n        <ng-template #addTag>\r\n            <div style=\"overflow: auto;\">\r\n                <ngx-treetable #treetable [config]=\"config\" (expand)=\"queryNext($event)\"></ngx-treetable>\r\n            </div>\r\n        </ng-template>\r\n    </div>\r\n    <div mat-dialog-actions class=\"dialog-action\">\r\n        <button mat-raised-button (click)=\"onNoClick()\">{{'dlg.cancel' | translate}}</button>\r\n        <button mat-raised-button color=\"primary\" (click)=\"onOkClick()\">{{'dlg.ok' | translate}}</button>\r\n    </div>\r\n</div>";
 
 /***/ }),
 
