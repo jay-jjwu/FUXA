@@ -157,6 +157,7 @@ function TDengine(_settings, _log, _currentStorage) {
         return new Promise(function (resolve, reject) {
             const cursor = conn.cursor()
             let data = []
+            //add by J, add tagid in into sql query
             cursor.query(`SELECT CAST(dt as BIGINT) as dt, tag_value
                           FROM ${database}.meters
                           WHERE tag_id = '${tagid}' 
