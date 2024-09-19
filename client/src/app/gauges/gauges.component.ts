@@ -62,8 +62,8 @@ export class GaugesManager {
     static GaugeWithProperty = [HtmlInputComponent.prefix, HtmlSelectComponent.prefix, HtmlSwitchComponent.prefix];
     // list of gauges tags to check who as events like mouse click
     static GaugeWithEvents = [HtmlButtonComponent.TypeTag, GaugeSemaphoreComponent.TypeTag, ShapesComponent.TypeTag, ProcEngComponent.TypeTag, MetaShapesComponent.TypeTag,
-        ApeShapesComponent.TypeTag, HtmlImageComponent.TypeTag, HtmlInputComponent.TypeTag, PanelComponent.TypeTag, HtmlSelectComponent.TypeTag,
-        HtmlSwitchComponent.TypeTag];
+    ApeShapesComponent.TypeTag, HtmlImageComponent.TypeTag, HtmlInputComponent.TypeTag, PanelComponent.TypeTag, HtmlSelectComponent.TypeTag,
+    HtmlSwitchComponent.TypeTag];
     // list of gauges tags to check who as events like mouse click
     static GaugeWithActions = [ApeShapesComponent, PipeComponent, ProcEngComponent, MetaShapesComponent, ShapesComponent, HtmlButtonComponent, HtmlSelectComponent,
         ValueComponent, HtmlInputComponent, GaugeSemaphoreComponent, HtmlImageComponent, PanelComponent];
@@ -410,7 +410,7 @@ export class GaugesManager {
                         let sigs = this.hmiService.getGraphSignal(ga.property.id);
                         return sigs;
                     } else if (typeof GaugesManager.Gauges[i]['getSignals'] === 'function') {
-                        return GaugesManager.Gauges[i]['getSignals'](ga.property);
+                        return GaugesManager.Gauges[i]['getSignals'](ga.property); 
                     } else {
                         return null;
                     }
@@ -439,7 +439,7 @@ export class GaugesManager {
      * return all events binded to the gauge with mouse event
      * @param ga
      */
-     getBindMouseEvent(ga: GaugeSettings, evType: GaugeEventType) {
+    getBindMouseEvent(ga: GaugeSettings, evType: GaugeEventType) {
         for (let i = 0; i < GaugesManager.Gauges.length; i++) {
             if (ga.type.startsWith(GaugesManager.Gauges[i].TypeTag)) {
                 if (typeof GaugesManager.Gauges[i]['getEvents'] === 'function') {
@@ -564,7 +564,7 @@ export class GaugesManager {
     toggleSignalValue(sigid: string) {
         if (this.hmiService.variables.hasOwnProperty(sigid)) {
             let currentValue = this.hmiService.variables[sigid].value;
-            if (currentValue === null || currentValue === undefined){
+            if (currentValue === null || currentValue === undefined) {
                 return;
             } else {
                 if (currentValue === 0 || currentValue === '0') {
@@ -585,13 +585,24 @@ export class GaugesManager {
      * @param event
      */
     putEvent(event: Event) {
+
+        // --------------------------------------------------------------------
+        // modifed by J, allocate the first action tag link as tagPrefix, check if 1st action link start as meta, then use it as tagPrefix; if not, set as null
+        let tagPrefix = '';
+        if (event.ga.property.actions?.length) {
+            if (event.ga.property.actions[0].variableId?.startsWith('meta')) {
+                tagPrefix = event.ga.property.actions[0].variableId;
+            }
+        }
+        // ----------------------------------------------------------------------------
         if (event.type === HtmlImageComponent.propertyWidgetType) {
             const value = GaugeBaseComponent.valueBitmask(event.ga.property.bitmask, event.value, this.hmiService.variables[event.variableId]?.value);
             this.hmiService.putSignalValue(event.variableId, String(value));
             event.dbg = 'put ' + event.variableId + ' ' + event.value;
         } else if (event.ga.property && event.ga.property.variableId) {
             const value = GaugeBaseComponent.valueBitmask(event.ga.property.bitmask, event.value, this.hmiService.variables[event.ga.property.variableId]?.value);
-            this.hmiService.putSignalValue(event.ga.property.variableId, String(value));
+            this.hmiService.putSignalValue(tagPrefix + event.ga.property.variableId, String(value));    //add by J, add tagPrefix as putSignalValue tagPrefix
+
             event.dbg = 'put ' + event.ga.property.variableId + ' ' + event.value;
         }
         this.onevent.emit(event);
@@ -603,6 +614,7 @@ export class GaugesManager {
      * @param val
      */
     putSignalValue(sigid: string, val: string, fnc: string = null) {
+        // console.log("putSignalValue", sigid)
         this.hmiService.putSignalValue(sigid, val, fnc);
     }
 
@@ -678,7 +690,7 @@ export class GaugesManager {
      * @param elements
      */
     static initElementColor(bkcolor, color, elements) {
-        var elems = elements.filter(function(el) { return el; });
+        var elems = elements.filter(function (el) { return el; });
         for (let i = 0; i < elems.length; i++) {
             let type = elems[i].getAttribute('type');
             if (type) {
@@ -793,7 +805,7 @@ export class GaugesManager {
             this.mapGauges[ga.id] = gauge;
             return gauge;
         } else if (ga.type.startsWith(HtmlInputComponent.TypeTag)) {
-            let gauge = HtmlInputComponent.initElement(ga, isview);
+            let gauge = HtmlInputComponent.initElement(ga, isview); 
             return gauge || true;
         } else if (ga.type.startsWith(HtmlSelectComponent.TypeTag)) {
             let gauge = HtmlSelectComponent.initElement(ga, isview);
@@ -855,7 +867,7 @@ export class GaugesManager {
                         let sigid = line.id;
                         let sigProperty = this.hmiService.getMappedVariable(sigid, true);
                         if (sigProperty) {
-                            gauge.addLine(sigid, sigProperty.name, line, yaxisNotOne?true:false);
+                            gauge.addLine(sigid, sigProperty.name, line, yaxisNotOne ? true : false);
                         }
                     }
                     gauge.redraw();

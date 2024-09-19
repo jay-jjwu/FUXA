@@ -34,8 +34,8 @@ export class MetaShapesComponent extends GaugeBaseComponent {
     // --------------------------------------------------------------------
     // modifed by J, allocate the first action tag link as tagPrefix, check if 1st action link start as meta, then use it as tagPrefix; if not, set as null
     let tagPrefix = '';
-    if (pro.actions?.length) {
-      if (pro.actions[0].variableId?.startsWith('meta')) {
+    if (pro) {
+      if (pro.actions?.length>0 && pro.actions[0].variableId?.startsWith('meta')) {
         tagPrefix = pro.actions[0].variableId;
       }
     }
@@ -82,17 +82,11 @@ export class MetaShapesComponent extends GaugeBaseComponent {
       // --------------------------------------------------------------------
       // modifed by J, allocate the first action tag link as tagPrefix, check if 1st action link start as 'meta', then use it as tagPrefix; if not, set as null
       let tagPrefix = '';
-      if (ga.property.actions?.length) {
-        if (ga.property.actions[0].variableId?.startsWith('meta')) {
+      if (ga.property) {
+        if (ga.property.actions?.length>0 && ga.property.actions[0].variableId?.startsWith('meta')) {
           tagPrefix = ga.property.actions[0].variableId;
         }
       }
-      // console.log('ga property');
-      // console.log(ga.property);
-      // console.log('tagPrefix');
-      // console.log(tagPrefix);
-      // console.log('sig value');
-      // console.log(sig);
       // --------------------------------------------------------------------
       if (svgele.node) {
         let value = parseFloat(sig.value);

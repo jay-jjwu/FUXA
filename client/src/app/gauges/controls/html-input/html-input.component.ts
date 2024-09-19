@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
-import { GaugeBaseComponent } from '../../gauge-base/gauge-base.component';
-import { GaugeSettings, Variable, GaugeStatus, GaugeAction, Event, GaugeActionsType, InputOptionType, InputTimeFormatType, InputConvertionType } from '../../../_models/hmi';
 import { Utils } from '../../../_helpers/utils';
+import { Event, GaugeAction, GaugeActionsType, GaugeSettings, GaugeStatus, InputConvertionType, InputOptionType, InputTimeFormatType, Variable } from '../../../_models/hmi';
+import { GaugeBaseComponent } from '../../gauge-base/gauge-base.component';
 import { GaugeDialogType } from '../../gauge-property/gauge-property.component';
 
 declare var SVG: any;
@@ -19,20 +19,33 @@ export class HtmlInputComponent extends GaugeBaseComponent {
     static prefix = 'I-HXI_';
 
     static actionsType = { hide: GaugeActionsType.hide, show: GaugeActionsType.show };
-    static InputDateTimeType = ['date','time', 'datetime'];
+    static InputDateTimeType = ['date', 'time', 'datetime'];
 
     constructor() {
         super();
     }
 
     static getSignals(pro: any) {
+        // --------------------------------------------------------------------
+        // modifed by J, allocate the first action tag link as tagPrefix, check if 1st action link start as meta, then use it as tagPrefix; if not, set as null
+        let tagPrefix = '';
+        if (pro) {
+            if (pro.actions?.length > 0 && pro.actions[0].variableId?.startsWith('meta')) {
+                tagPrefix = pro.actions[0].variableId;
+            }
+        }
+        // --------------------------------------------------------------------
         let res: string[] = [];
         if (pro.variableId) {
-            res.push(pro.variableId);
+            res.push(tagPrefix + pro.variableId);   // modifed by J, add tag prefix
         }
         if (pro.actions && pro.actions.length) {
             pro.actions.forEach(act => {
-                res.push(act.variableId);
+                // res.push(act.variableId);
+                //modified by J, add tag prefix to the variableId, check only actions not starting with variableId = 'meta'
+                if (!act.variableId.startsWith('meta')) {
+                    res.push(tagPrefix + act.variableId);
+                }
             });
         }
         return res;
@@ -63,6 +76,15 @@ export class HtmlInputComponent extends GaugeBaseComponent {
 
     static processValue(ga: GaugeSettings, svgele: any, sig: Variable, gaugeStatus: GaugeStatus) {
         try {
+            // --------------------------------------------------------------------
+            // modifed by J, allocate the first action tag link as tagPrefix, check if 1st action link start as 'meta', then use it as tagPrefix; if not, set as null
+            let tagPrefix = '';
+            if (ga.property) {
+                if (ga.property.actions?.length > 0 && ga.property.actions[0].variableId?.startsWith('meta')) {
+                    tagPrefix = ga.property.actions[0].variableId;
+                }
+            }
+            // --------------------------------------------------------------------
             if (svgele.node && svgele.node.children && svgele.node.children.length >= 1) {
                 let input = Utils.searchTreeStartWith(svgele.node, this.prefix);
                 if (input) {
@@ -127,7 +149,7 @@ export class HtmlInputComponent extends GaugeBaseComponent {
                     // check actions
                     if (ga.property.actions) {
                         ga.property.actions.forEach(act => {
-                            if (act.variableId === sig.id) {
+                            if (!act.variableId.startsWith('meta') && tagPrefix + act.variableId === sig.id) {  //modified by J, add tag prefix to the variableId, check only actions not starting with variableId = 'meta'
                                 HtmlInputComponent.processAction(act, svgele, input, val, gaugeStatus);
                             }
                         });
@@ -140,7 +162,7 @@ export class HtmlInputComponent extends GaugeBaseComponent {
     }
 
     static initElement(gab: GaugeSettings, isView: boolean): HtmlInputElement {
-        let input: HTMLInputElement  = null;
+        let input: HTMLInputElement = null;
         if (isView) {
             let ele = document.getElementById(gab.id);
             if (ele && gab.property) {
@@ -212,15 +234,15 @@ export class HtmlInputComponent extends GaugeBaseComponent {
                             setButton.addEventListener('mouseup', resetButtonPress);
                             setButton.addEventListener('touchend', resetButtonPress);
                             function startButtonPress() {
-                              setButton.style.backgroundColor = 'rgba(0,0,0,0.2)';
+                                setButton.style.backgroundColor = 'rgba(0,0,0,0.2)';
                             }
                             function resetButtonPress() {
-                              setButton.style.backgroundColor = 'unset';
+                                setButton.style.backgroundColor = 'unset';
                             }
 
-                            setButton.addEventListener('click', function() {
-                              const enterKeyEvent = new KeyboardEvent('keydown', { key: 'Enter' });
-                              input.dispatchEvent(enterKeyEvent);
+                            setButton.addEventListener('click', function () {
+                                const enterKeyEvent = new KeyboardEvent('keydown', { key: 'Enter' });
+                                input.dispatchEvent(enterKeyEvent);
                             });
                         }
                     }
@@ -231,14 +253,14 @@ export class HtmlInputComponent extends GaugeBaseComponent {
             if (ele) {
                 // Input element is npt precisely aligned to the center of the surrounding rectangle. Compensate it with the padding.
                 let fobj = ele.getElementsByTagName('foreignObject');
-                if(fobj){
+                if (fobj) {
                     fobj[0].style.paddingLeft = '1px';
                 }
 
                 // Set the border on the surrounding svg rect
                 let rects = ele.getElementsByTagName('rect');
-                if(rects){
-                    rects[0].setAttribute('stroke-width','0.5');
+                if (rects) {
+                    rects[0].setAttribute('stroke-width', '0.5');
                 }
             }
         }
@@ -309,16 +331,16 @@ export class HtmlInputComponent extends GaugeBaseComponent {
     }
 
     static validateValue(value: any, ga: GaugeSettings): InputValueValidation {
-        let result = <InputValueValidation> {
+        let result = <InputValueValidation>{
             valid: true,
             value: value,
             errorText: '',
             min: 0,
             max: 0
         };
-        if (ga.property?.options?.numeric || ga.property?.options?.type === InputOptionType.number){
-            if(!Utils.isNullOrUndefined(ga.property.options.min) && !Utils.isNullOrUndefined(ga.property.options.max)){
-                if(Number.isNaN(value) || !(/^-?[\d.]+$/.test(value))){
+        if (ga.property?.options?.numeric || ga.property?.options?.type === InputOptionType.number) {
+            if (!Utils.isNullOrUndefined(ga.property.options.min) && !Utils.isNullOrUndefined(ga.property.options.max)) {
+                if (Number.isNaN(value) || !(/^-?[\d.]+$/.test(value))) {
                     return {
                         ...result,
                         valid: false,
@@ -327,7 +349,7 @@ export class HtmlInputComponent extends GaugeBaseComponent {
                 }
                 else {
                     let numVal = parseFloat(value);
-                    if(numVal < ga.property.options.min || numVal > ga.property.options.max){
+                    if (numVal < ga.property.options.min || numVal > ga.property.options.max) {
                         return {
                             ...result,
                             valid: false,
@@ -341,9 +363,9 @@ export class HtmlInputComponent extends GaugeBaseComponent {
         } else if (ga.property?.options?.convertion === InputConvertionType.milliseconds && ga.property?.options?.type === InputOptionType.time) {
             const [hour, minute, seconds, milliseconds] = value.split(/:|\./);;
             result.value = ((hour ? parseInt(hour) * 3600 : 0)
-                            + (minute ? parseInt(minute) * 60 : 0)
-                            + (seconds ? parseInt(seconds) : 0)) * 1000
-                            + (milliseconds ? parseInt(milliseconds) : 0);
+                + (minute ? parseInt(minute) * 60 : 0)
+                + (seconds ? parseInt(seconds) : 0)) * 1000
+                + (milliseconds ? parseInt(milliseconds) : 0);
         } else if (ga.property?.options?.convertion === InputConvertionType.milliseconds
             && (ga.property?.options?.type === InputOptionType.date || ga.property?.options?.type === InputOptionType.datetime)) {
             result.value = new Date(value).getTime();
