@@ -41,7 +41,6 @@ export class HtmlInputComponent extends GaugeBaseComponent {
         }
         if (pro.actions && pro.actions.length) {
             pro.actions.forEach(act => {
-                // res.push(act.variableId);
                 //modified by J, add tag prefix to the variableId, check only actions not starting with variableId = 'meta'
                 if (!act.variableId.startsWith('meta')) {
                     res.push(tagPrefix + act.variableId);
